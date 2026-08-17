@@ -22,4 +22,6 @@ airflow_settings.yaml
 
 # macOS
 .DS_Store
+
+# SPec interne
 CLAUDE.md
