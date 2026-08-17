@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.env
+
+service_account*.json
+*-key.json
+credentials*.json
+
+# ListenBrainz
+data/
+
+# dbt
+target/
+dbt_packages/
+logs/
+
+# Airflow / Astronomer 
+.astro/
+airflow_settings.yaml
+
+# macOS
+.DS_Store
+CLAUDE.md
