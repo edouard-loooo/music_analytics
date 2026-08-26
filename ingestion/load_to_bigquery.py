@@ -63,7 +63,7 @@ def main():
 
     job.result()  # Wait for the job to complete
 
-    logging.info("%s lignes chargées dans %s", job.output_rows, table_id)
+    logging.info("%s lines loaded into %s", job.output_rows, table_id)
 
 if __name__ == "__main__":
     main()

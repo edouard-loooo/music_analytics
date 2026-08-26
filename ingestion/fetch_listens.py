@@ -17,7 +17,7 @@ URL = f"https://api.listenbrainz.org/1/user/{USERNAME}/listens"
 PAGE_SIZE = 1000
 OUTPUT_PATH = "data/listen_raw.jsonl"
 
-MAX_ATTEMPS = 3
+MAX_ATTEMPTS = 3
 
 def throttle(response):
     remaining = int(response.headers.get("X-RateLimit-Remaining", 0))
@@ -35,7 +35,7 @@ def fetch_page(session, cursor):
         "max_ts": cursor
     }
 
-    for attempts in range(1,MAX_ATTEMPS + 1):
+    for attempts in range(1, MAX_ATTEMPTS + 1):
         try :
             response = session.get(URL, params=params, timeout=(10, 60))
             response.raise_for_status()  
@@ -44,7 +44,7 @@ def fetch_page(session, cursor):
         
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
             logging.warning("Timeout error on attempt %s: %s", attempts, e)
-            if attempts == MAX_ATTEMPS:
+            if attempts == MAX_ATTEMPTS:
                 raise
             time.sleep(2**attempts)  # Wait before retrying 
             
