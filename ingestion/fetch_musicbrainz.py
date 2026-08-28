@@ -64,7 +64,7 @@ def main():
     else:
         cache = []
 
-    unique_mbids_cache = {artist["id"] for artist in cache}
+    unique_mbids_cache = {r["id"] for r in cache}
 
     query_job = client.query(entity_config["sql"])
     results = query_job.result()
@@ -127,9 +127,10 @@ def main():
                         raise
 
                 except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                    logging.warning("Error %s. (attempt %s). Retry.", e, attempt)
                     if attempt == MAX_ATTEMPTS:
+                        logging.error("%s, on attempt %s. Skip.", e, attempt)
                         break
+                    logging.warning("Error %s. (attempt %s). Retry.", e, attempt)
                     time.sleep(2 ** attempt)
 
             time.sleep(1)
