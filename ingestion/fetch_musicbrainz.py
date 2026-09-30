@@ -64,7 +64,7 @@ def main():
     else:
         cache = []
 
-    unique_mbids_cache = {r["id"] for r in cache}
+    unique_mbids_cache = {r["requested_mbid"] for r in cache}
 
     query_job = client.query(entity_config["sql"])
     results = query_job.result()
@@ -93,6 +93,7 @@ def main():
                     fetched_data = response.json()
 
                     row = {
+                        "requested_mbid": mbid,
                         "id": fetched_data.get("id"),
                         "name": fetched_data.get(entity_config["name_field"]),
                         "payload": fetched_data,
@@ -105,7 +106,7 @@ def main():
 
                     logging_counter += 1
                     if logging_counter % 50 == 0:
-                        logging.info("%d artists retrieved over %s", logging_counter, nb_entities_to_retrieve)
+                        logging.info("%d lines retrieved over %s", logging_counter, nb_entities_to_retrieve)
 
                     break  
 
@@ -141,6 +142,7 @@ def main():
         source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
         write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
         schema=[
+            bigquery.SchemaField("requested_mbid", "STRING"),
             bigquery.SchemaField("id", "STRING"),
             bigquery.SchemaField("name", "STRING"),
             bigquery.SchemaField("payload", "JSON"),
