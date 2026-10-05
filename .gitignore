@@ -16,9 +16,6 @@ target/
 dbt_packages/
 logs/
 
-# Airflow / Astronomer 
-.astro/
-airflow_settings.yaml
 
 # macOS
 .DS_Store
