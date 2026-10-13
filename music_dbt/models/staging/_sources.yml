@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: raw
+    description: extracted data from MusicBrainz & ListenBrainz databases by a self made API batching script. The data is stored in BigQuery tables.
+    schema: raw                   
+    tables:
+      - name: listens_personal   
+        description: raw listens data. 1 row per listen (can have doubles)
+        columns:
+          - name: listened_at
+            description: date of listen
+            data_tests:
+              - not_null
+          - name: user_name
+            description: user name of the listener
+            data_tests:
+              - not_null
+          - name: recording_msid
+            description: id of the recording
+            data_tests:
+              - not_null
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+          loaded_at_field : _loaded_at
+      - name: artists_musicbrainz   
+        description: raw artists data. 1 row per artist mbid requested to API
+        columns:
+          - name: requested_mbid
+            description: unique id of an artist when requested from the MusicBrainz API
+            data_tests:
+              - not_null
+              - unique
+          - name: id
+            description: mbid recieved from API after potential 301 redirect (can be different from requested_mbid and have doubles)
+      - name: releases_musicbrainz   
+        description: raw releases data. 1 row per release mbid requested to API
+        columns:
+          - name: requested_mbid
+            description: unique id of a release when requested from the MusicBrainz API
+            data_tests:
+              - not_null
+              - unique
+          - name: id
+            description: mbid recieved from API after potential 301 redirect (can be different from requested_mbid and have doubles)

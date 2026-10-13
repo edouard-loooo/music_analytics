@@ -1,0 +1,163 @@
+version: 2
+
+models: 
+  - name: stg_listens
+    description: '{{ doc("stg_listens") }}'
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: _loaded_at
+        data_type: timestamp
+        description: timestamp of when the row was loaded into the raw table
+        data_tests:
+          - not_null
+      - name: listened_at
+        description: timestamp of when the listen happened
+        data_type: timestamp
+        data_tests:
+          - not_null
+      - name: inserted_at
+        description: timestamp of when the listen was inserted into listenBrainz
+        data_type: timestamp
+        data_tests:
+          - not_null
+      - name: user_name
+        description: the name of the user who listened to the track
+        data_type: string
+        data_tests:
+          - not_null
+      - name: recording_msid
+        description: msid of the track
+        data_type: string
+        data_tests:
+          - not_null
+      - name: source
+        description: source API
+        data_type: string
+        data_tests:
+          - not_null
+          - accepted_values: 
+              arguments:
+                values: ['listenbrainz_api']
+      - name: submitted_artist_name
+        description: artist name
+        data_type: string
+        data_tests:
+          - not_null
+      - name: submitted_release_name
+        description: project name
+        data_type: string
+      - name: submitted_track_name
+        description: track name
+        data_type: string
+        data_tests:
+          - not_null
+      - name: recording_mbid
+        description: mbid of the track
+        data_type: string
+      - name: release_mbid
+        description: mbid of the project
+        data_type: string
+      - name: recording_name
+        description: track name
+        data_type: string
+      - name: artist_mbids
+        description: list of mbids of the artists
+        data_type: array<string>
+      - name: artists
+        description: list of artists 
+        data_type: json
+      - name: caa_id
+        description: cover art id 
+        data_type: int64
+      - name: caa_release_mbid
+        description: mbid of the cover art
+        data_type: string
+      - name: lastfm_artist_mbid
+        description: mbid of the artist from last.fm
+        data_type: string
+      - name: submission_client
+        description: client used to submit the listen
+        data_type: string
+        data_tests:
+          - accepted_values: 
+              arguments:
+                  values: ['ListenBrainz lastfm importer v2']
+              config: {severity: warn}
+            
+  - name: stg_artists
+    description: '{{ doc("stg_artists") }}'
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: _fetched_at
+        data_type: timestamp
+        description: timestamp of when the row was fetched from the API 
+        data_tests:
+          - not_null
+      - name: requested_mbid
+        description: mbid of the artist that was requested
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: canonical_mbid
+        description: mbid of the artist that is received after potential 301 redirects
+        data_type: string
+        data_tests:
+          - not_null
+      - name: artist_name
+        description: the name of the artist
+        data_type: string
+        data_tests:
+          - not_null
+      - name: area_name
+        description: the name of the area the artist is from (can be country or city)
+        data_type: string
+      - name: country_code
+        description: country the artist is from; code ISO 3166-1 alpha-2
+        data_type: string
+      - name: begin_area_name
+        description: name of the area the artist debuted
+        data_type: string
+      - name: gender
+        description: artist gender
+        data_type: string
+        data_tests:
+          - accepted_values: 
+              arguments:
+                  values: ['Male', 'Female', 'Other', 'Non-binary','Not applicable']
+              config: {severity: warn}
+      - name: life_span_begin
+        description: date the artist debuted
+        data_type: string
+      - name: life_span_end
+        description: date the artist retired
+        data_type: string
+      - name: life_span_ended
+        description: whether the artist's life span has ended
+        data_type: boolean
+        data_tests:
+          - not_null
+      - name: life_span_begin_year
+        description: year the artist debuted (null values can still relate to a known month and day)
+        data_type: int64
+      - name: life_span_end_year
+        description: year the artist retired (null values can still relate to a known month and day)
+        data_type: int64
+      - name: disambiguation
+        description: free of use text area for contributors adding more details
+        data_type: string
+      - name: sort_name
+        description: name of the artist used for alphabetical sorting
+        data_type: string
+      - name: artist_type
+        description: type of the artist
+        data_type: string
+        data_tests:
+          - accepted_values: 
+              arguments:
+                  values: ['Person', 'Group', 'Orchestra', 'Choir', 'Character', 'Other']
+   
