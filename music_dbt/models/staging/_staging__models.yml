@@ -160,4 +160,81 @@ models:
           - accepted_values: 
               arguments:
                   values: ['Person', 'Group', 'Orchestra', 'Choir', 'Character', 'Other']
-   
+
+  - name: stg_releases
+    description: '{{ doc("stg_releases") }}'
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: _fetched_at
+        data_type: timestamp
+        description: timestamp of when the row was fetched from the API 
+        data_tests:
+          - not_null
+      - name: requested_mbid
+        description: mbid of the release that was requested
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: canonical_mbid
+        description: mbid of the release that is received after potential 301 redirects
+        data_type: string
+        data_tests:
+          - not_null
+      - name: release_name
+        description: the title of the release (edition specific)
+        data_type: string
+        data_tests:
+          - not_null
+      - name: release_country_code
+        description: MusicBrainz code for the country of the release (not ISO, XW = world, XE = EUrope, not artist country)
+        data_type: string
+      - name: release_date
+        description: release date of the current edition
+        data_type: string
+      - name: release_status
+        description: status of the release
+        data_type: string
+        data_tests:
+          - accepted_values: 
+              arguments:
+                  values: ['Official', 'Bootleg', 'Withdrawn','Promotion', 'Pseudo-Release', 'Expunged', 'Cancelled']
+              config: {severity: warn}
+      - name: release_group_mbid
+        description: mbid of the release group
+        data_type: string
+        data_tests:
+          - not_null
+      - name: release_group_name
+        description: name of the release group
+        data_type: string
+        data_tests:
+          - not_null
+      - name: release_group_first_release_date
+        description: first release date of the release, any edition
+        data_type: string
+      - name: release_group_primary_type
+        description: type of the release
+        data_type: string
+        data_tests:
+          - accepted_values: 
+              arguments:
+                  values: ['Album', 'Single', 'EP', 'Broadcast', 'Other']
+              config: {severity: warn}
+      - name: release_group_secondary_types
+        description: secondary types of the release 
+        data_type: array<string>
+      - name: language_code
+        description: language of the track (code ISO 639-3), 'nul' if many langueges
+        data_type: string
+      - name: disambiguation
+        description: free of use text area for contributors adding more details
+        data_type: string
+      - name: release_year
+        description: release year of the edition
+        data_type: int64
+      - name: release_group_first_release_year
+        description: release year of the release group, any edition
+        data_type: int64

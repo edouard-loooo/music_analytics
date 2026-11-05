@@ -14,7 +14,12 @@
 
 {% docs stg_releases %}
 
+- staging of the releases table
+- 1 row per requested release mbid
 
+- canonical mbids are recieved ids from the api after potential 301 redirect, can have doubles
+- release-group is a track, from any edition;
+- release itself is a track, its data can differ depending on edition
 
 {% enddocs %}
 
