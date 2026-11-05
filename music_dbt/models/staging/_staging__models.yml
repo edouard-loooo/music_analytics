@@ -59,6 +59,14 @@ models:
       - name: release_mbid
         description: mbid of the project
         data_type: string
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_releases')
+                field: requested_mbid
+              config:
+                warn_if: ">0"
+                error_if: ">500"
       - name: recording_name
         description: track name
         data_type: string
