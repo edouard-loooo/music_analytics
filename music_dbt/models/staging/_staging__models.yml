@@ -246,3 +246,42 @@ models:
       - name: release_group_first_release_year
         description: release year of the release group, any edition
         data_type: int64
+
+  - name: stg_tags
+    description: '{{ doc("stg_tags") }}'
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: tag_id
+        description: couple requested artist mbid + tag name serving as grain
+        data_type: string
+        data_tests:
+          - not_null
+      - name: artist_mbid
+        description: requested artist mbid
+        data_type: string
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_artists')
+                field: requested_mbid
+      - name: tag_name
+        description: name of the tag
+        data_type: string
+        data_tests:
+          - not_null
+      - name: nb_vote
+        description: number of votes for the tag (from the community)
+        data_type: int64
+        data_tests:
+          - not_null
+      - name: genre_mbid 
+        description: mbid of the associated genre (if any)
+        data_type: string
+      - name: is_genre
+        description: flag tags that are classified as genre 
+        data_type: boolean
+        data_tests:
+          - not_null

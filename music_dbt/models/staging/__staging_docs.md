@@ -31,5 +31,14 @@
 - canonical mbids are recieved ids from the api after potential 301 redirect, can have doubles
 - dates may be incomplete, year is derived when available but some rows only have month and/or day
 
+{% enddocs %}
+
+{% docs stg_tags %}
+
+- staging of the tags extracted from the artists table
+- 1 row per artist - tag couples
+
+- genres are a subset of tags, when a tag is recognized from the official musicbrainz list, it becomes a genre and receive a mbid
+- count (nb_vote) is the number of votes given by the community and can represent the main tag / genre to associate to the artist
 
 {% enddocs %}
