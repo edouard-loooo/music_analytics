@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_listens_deduplicated
+    description: Intermediate model to remove duplicates rows due to the safety pagination script
+    columns:
+      - name: listen_id
+        description: unique identifier for the listen (generated with dbt_utils)
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
