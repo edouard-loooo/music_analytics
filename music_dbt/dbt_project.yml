@@ -38,4 +38,7 @@ models:
     intermediate:
       +schema: intermediate
       +materialized: view
+
+vars:
+  name_imputation_min_share: 0.9
  

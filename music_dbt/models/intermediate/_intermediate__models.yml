@@ -1,6 +1,7 @@
 version: 2
 
 models:
+
   - name: int_listens_deduplicated
     description: Intermediate model to remove duplicates rows due to the safety pagination script
     columns:
@@ -10,3 +11,28 @@ models:
         data_tests:
           - not_null
           - unique
+
+  - name: int_artist_name_map
+    description: Intermediate model to map normalized artist names to their mbid for retrieving some missing mbids, 
+                 treshold of {{ var('name_imputation_min_share') }} to determine when many mbid on the same artist name
+    columns:
+      - name: normalized_artist_name
+        description: normalized artist name
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: artist_mbid
+        description: mbid of the artist
+        data_type: string
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_artists')
+                field: requested_mbid
+      - name: supporting_credits
+        description: amount of credits that support the choice of this mbid mapping
+        data_type: integer
+        data_tests:
+          - not_null
