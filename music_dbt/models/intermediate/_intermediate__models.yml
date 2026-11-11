@@ -11,6 +11,10 @@ models:
         data_tests:
           - not_null
           - unique
+          - relationships:
+              arguments:
+                to: ref('int_listen_artists')
+                field: listen_id
 
   - name: int_artist_name_map
     description: Intermediate model to map normalized artist names to their mbid for retrieving some missing mbids, 
@@ -34,5 +38,56 @@ models:
       - name: supporting_credits
         description: amount of credits that support the choice of this mbid mapping
         data_type: integer
+        data_tests:
+          - not_null
+
+  - name: int_listen_artists
+    description: '{{ doc("int_listen_artists") }}'
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['listen_id', 'artist_position']
+    columns:
+      - name: listen_id
+        description: unique identifier for the listen (generated with dbt_utils)
+        data_type: string
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_listens_deduplicated')
+                field: listen_id
+      - name: artist_mbid
+        description: mbid of the artist
+        data_type: string
+        data_tests:
+          - not_null:
+              config:
+                where: "artist_resolution_method != 'text_only'"
+          - relationships:
+              arguments:
+                to: ref('stg_artists')
+                field: requested_mbid
+      - name: artist_position
+        description: position of the artist in the list of artists for the listen, indicator of main artist if 0
+        data_type: integer
+        data_tests:
+          - not_null
+      - name: artist_credit_name
+        description: name of the artist as credited in the listen
+        data_type: string
+        data_tests:
+          - not_null
+      - name: artist_resolution_method
+        description: '{{ doc("artist_resolution_method") }}'
+        data_type: string
+        data_tests:
+          - not_null
+          - accepted_values: 
+              arguments:
+                values: ['musicbrainz', 'lastfm', 'name_imputation', 'text_only']
+      - name: artist_key
+        description: unique key of the artist, either the mbid if recovered, either the normalized name if not recovered
+        data_type: string
         data_tests:
           - not_null
