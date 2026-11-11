@@ -1,0 +1,10 @@
+snapshots:
+  - name: snap_artists
+    relation: ref('stg_artists')
+    config:
+      schema: snapshots
+      unique_key: requested_mbid
+      strategy: check
+      check_cols: [canonical_mbid, artist_name, area_name, country_code, begin_area_name, gender, life_span_begin, life_span_end, life_span_ended, disambiguation, sort_name, artist_type]
+      hard_deletes: ignore
+      dbt_valid_to_current: "cast('9999-12-31' as timestamp)"
