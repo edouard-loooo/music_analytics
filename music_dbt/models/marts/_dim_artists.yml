@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: dim_artists
+    description: Artists dimension table, SCD type 2, 1 row per artist version
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: artist_version_key
+        description: grain of the table, unique identifier for artist - version couples
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: artist_name
+        data_type: string
+        data_tests:
+          - not_null
+      - name: artist_key
+        description: mbid or normalized name for artists with no mbid (2 artists with no mbid and same name will be merged)
+        data_type: string
+        data_tests:
+          - not_null
+          - unique:
+              config:
+                where: "is_current = true"
+      - name: valid_from
+        description: timestamp of the begin of validity of a version, '1900-01-01' for the first version and applied to all past listens 
+        data_type: timestamp
+        data_tests:
+          - not_null
+      - name: valid_to
+        description: timestamp of limit of validity of a version, '9999-12-31' for the current version
+        data_type: timestamp
+        data_tests:
+          - not_null
+      - name: is_current
+        description: flag the current version of an artist, calculated from the 'valid_to' column
+        data_type: boolean
+        data_tests:
+          - not_null
+      - name: has_musicbrainz_metadata
+        description: flag if the artist has a musicbrainz documentation, to differentiate no metadata from incomplete
+        data_type: boolean
+        data_tests:
+          - not_null
+      - name: first_observed_at
+        description: timestamp of first snapshot of the version, null for text_only artists
+        data_type: timestamp
+      - name: requested_mbid
+        data_type: string
+      - name: canonical_mbid
+        data_type: string
+      - name: area_name
+        data_type: string
+      - name: country_code
+        data_type: string
+      - name: begin_area_name
+        data_type: string
+      - name: gender
+        data_type: string
+      - name: life_span_begin
+        data_type: string
+      - name: life_span_end
+        data_type: string
+      - name: life_span_ended
+        data_type: boolean
+      - name: disambiguation
+        data_type: string
+      - name: sort_name
+        data_type: string
+      - name: artist_type
+        data_type: string
+      - name: life_span_begin_year
+        data_type: int64
+      - name: life_span_end_year
+        data_type: int64

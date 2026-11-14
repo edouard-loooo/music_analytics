@@ -38,6 +38,9 @@ models:
     intermediate:
       +schema: intermediate
       +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table
 
 vars:
   name_imputation_min_share: 0.9
